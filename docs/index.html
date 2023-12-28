@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <style>
+            #circle {
+                width: 500px;
+                height: 500px;
+                border-radius: 50%;
+                position: absolute;
+                top: 100px;
+                left: 140px;
+                box-sizing: border-box;
+                padding: 0;
+                margin: 0;
+                overflow: hidden;
+            }
+            
+
+
+            @keyframes loading {
+                0 {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+    <body style="background-color: black; overflow: hidden;">
+        <div id="circle">
+
+        </div>
+        <script>
+            window.addEventListener("load", () => {
+                i = 0
+
+                function changeColour() {
+                    var doc = document.getElementById("circle");
+                    // doc.style.transition = "all 2s";
+                    doc.style.backgroundColor = "white"
+                    setInterval(change, 3000);
+                }
+                function change() {
+                    var doc = document.getElementById("circle");
+                    var color = ["blue", "brown", "green", "white", "pink"];
+                    const random = Math.floor(Math.random() * color.length);
+                    doc.style.backgroundColor = color[random];
+                }
+
+                function fourQuaters() {
+                    
+                    var doc = document.getElementById("circle");
+                    var width = doc.offsetWidth/2
+                    doc.style.borderWidth = width 
+                    doc.style.borderStyle = "solid"
+                    doc.style.borderColor = "red green pink yellow"
+                    doc.style.animation= "loading 1s linear infinite"
+                }
+
+                function fourQuatersFlashing() {
+                    
+                    var doc = document.getElementById("circle");
+                    var width = doc.offsetWidth/2
+                    doc.style.borderWidth = width 
+                    doc.style.borderStyle = "solid"
+                    setInterval(changeQuarter, 25);
+                }
+
+                function changeQuarter() {
+                    var doc = document.getElementById("circle");
+                    const random = Math.floor(Math.random() * 4) + 1
+                    doc.style.borderTopColor = getQuarterColour(random, 1)
+                    doc.style.borderRightColor = getQuarterColour(random, 2)
+                    doc.style.borderBottomColor = getQuarterColour(random, 3)
+                    doc.style.borderLeftColor = getQuarterColour(random, 4)
+                }
+
+                function getQuarterColour(random, section) {
+                    if(random == section)
+                        return "white"
+                    else
+                        return "black"
+                }
+
+                function clear() {
+                    doc.removeAttribute("style")
+                }
+
+                fourQuaters()
+                // fourQuatersFlashing()
+                // changeColour()
+            });
+
+        </script>
+    </body>
+</html>
