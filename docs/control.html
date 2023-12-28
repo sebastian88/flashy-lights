@@ -38,11 +38,12 @@
 
                     socket.onopen = function(e) {
                         console.log("Connected")
+                        socketPing()
                         if("myInterval" in window) {
                             console.log("clear interval")
                             clearInterval(myInterval)
                         }
-                        myInterval = setInterval(socketPing, 60000)
+                        myInterval = setInterval(socketPing, 6 * 60 * 1000)
                     };
 
                     socket.onmessage = function(event) {
