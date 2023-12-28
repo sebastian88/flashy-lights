@@ -38,6 +38,10 @@
 
                     socket.onopen = function(e) {
                         console.log("Connected")
+                        if("myInterval" in window) {
+                            console.log("clear interval")
+                            clearInterval(myInterval)
+                        }
                         myInterval = setInterval(socketPing, 60000)
                     };
 
@@ -53,15 +57,11 @@
                             // event.code is usually 1006 in this case
                             console.log('[close] Connection died');
                         }
-                        if("myInterval" in window)
-                            clearInterval(myInterval)
                         setTimeout(connect, 2000)
                     };
 
                     socket.onerror = function(error) {
                         console.log(`[error]`);
-                        if("myInterval" in window)
-                            clearInterval(myInterval)
                         setTimeout(connect, 2000)
                     };
                 }
