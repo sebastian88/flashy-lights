@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <style>
+            label {
+                color: white;
+                display: block;
+                margin-bottom: 40px;
+            }
+            #buttons {
+                width: 80%;
+                margin-left: 10%;
+            }
+
+            button {
+                width: 100%;
+                font-size: 50px;
+                margin-bottom: 40px;
+            }
+        </style>
+    </head>
+    <body style="background-color: black; overflow: hidden;">
+        <div id="buttons">
+            <label>
+                Diameter
+                <input type="number"/>
+            </label>
+            <button onclick="sendMessage('fourQuaters')" >Four Quarters</button>
+            <button onclick="sendMessage('fourQuatersFlashing')" >Four Quarters Flashing</button>
+            <button onclick="sendMessage('changeColour')" >Whole colour</button>
+        </div>
+        <script>
+
+            window.addEventListener("load", () => {
+
+                socket = new WebSocket("wss://9iw2tbwbl0.execute-api.eu-north-1.amazonaws.com/production/");
+
+                socket.onopen = function(e) {
+                    console.log("Connected")
+                    // socket.send(`{"action": "sendmessage", "message":"fourQuaters"}`);
+                };
+
+                socket.onmessage = function(event) {
+                    console.log(`[message] Data received from server: ${event.data}`);
+                };
+
+                socket.onclose = function(event) {
+                if (event.wasClean) {
+                    console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+                } else {
+                    // e.g. server process killed or network down
+                    // event.code is usually 1006 in this case
+                    console.log('[close] Connection died');
+                }
+                };
+
+                socket.onerror = function(error) {
+                    console.log(`[error]`);
+                };
+            });
+            function sendMessage(message) {
+                    socket.send(`{"action": "sendmessage", "message":"${message}"}`);
+            }
+        </script>
+    </body>
+</html>

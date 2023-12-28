@@ -36,9 +36,8 @@
 
                 function changeColour() {
                     var doc = document.getElementById("circle");
-                    // doc.style.transition = "all 2s";
                     doc.style.backgroundColor = "white"
-                    setInterval(change, 3000);
+                    myInterval = setInterval(change, 3000);
                 }
                 function change() {
                     var doc = document.getElementById("circle");
@@ -63,7 +62,7 @@
                     var width = doc.offsetWidth/2
                     doc.style.borderWidth = width 
                     doc.style.borderStyle = "solid"
-                    setInterval(changeQuarter, 25);
+                    myInterval = setInterval(changeQuarter, 50);
                 }
 
                 function changeQuarter() {
@@ -82,11 +81,78 @@
                         return "black"
                 }
 
+                function createRandomArray() {
+                    let randomArray = [1,2,3,4]
+
+                }
+
+                function shuffle(array) {
+                    let currentIndex = array.length,  randomIndex;
+
+                    // While there remain elements to shuffle.
+                    while (currentIndex > 0) {
+
+                        // Pick a remaining element.
+                        randomIndex = Math.floor(Math.random() * currentIndex);
+                        currentIndex--;
+
+                        // And swap it with the current element.
+                        [array[currentIndex], array[randomIndex]] = [
+                        array[randomIndex], array[currentIndex]];
+                    }
+
+                    return array;
+                }
+
                 function clear() {
+                    if("myInterval" in window)
+                        clearInterval(myInterval);
+                    
+                    var doc = document.getElementById("circle");
                     doc.removeAttribute("style")
                 }
 
-                fourQuaters()
+                function connect() {
+                    let socket = new WebSocket("wss://9iw2tbwbl0.execute-api.eu-north-1.amazonaws.com/production/");
+
+                    socket.onopen = function(e) {
+                        console.log("opening")
+                    };
+
+                    socket.onmessage = function(event) {
+                        console.log(`[message] Data received from server: ${event.data}`);
+                        if(event.data === "fourQuaters") {
+                            clear()
+                            fourQuaters()
+                        }
+                        else if(event.data === "fourQuatersFlashing") {
+                            clear()
+                            fourQuatersFlashing()
+                        }
+                        else if(event.data === "changeColour") {
+                            clear()
+                            changeColour()
+                        }
+                    };
+
+                    socket.onclose = function(event) {
+                    if (event.wasClean) {
+                        console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+                    } else {
+                        // e.g. server process killed or network down
+                        // event.code is usually 1006 in this case
+                        console.log('[close] Connection died');
+                    }
+                    };
+
+                    socket.onerror = function(error) {
+                        console.log(`[error]`);
+                    };
+                }
+
+                
+                connect()
+                // fourQuaters()
                 // fourQuatersFlashing()
                 // changeColour()
             });
