@@ -33,12 +33,41 @@
         <script>
             window.addEventListener("load", () => {
                 i = 0
+                myArray = []
+
+                function setCircle() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const d = urlParams.get('d');
+                    const l = urlParams.get('l');
+                    const t = urlParams.get('t');
+                    var doc = document.getElementById("circle");
+                    doc.style.width = d
+                    doc.style.height = d
+                    doc.style.top = t
+                    doc.style.left = l
+                }
+
+                function strobe() {
+                    i++
+                    var doc = document.getElementById("circle");
+                    if(i % 4 === 0)
+                        doc.style.backgroundColor = "white"
+                    else
+                        doc.style.backgroundColor = "black"
+                    myTimeout = setTimeout(strobe, 32)
+                }
+
+                function setupStrobe() {
+                    // myInterval = setInterval(strobe, 20);
+                    strobe()
+                }
 
                 function changeColour() {
                     var doc = document.getElementById("circle");
                     doc.style.backgroundColor = "white"
-                    myInterval = setInterval(change, 3000);
+                    myInterval = setInterval(change, 1000);
                 }
+                
                 function change() {
                     var doc = document.getElementById("circle");
                     var color = ["blue", "brown", "green", "white", "pink"];
@@ -62,12 +91,15 @@
                     var width = doc.offsetWidth/2
                     doc.style.borderWidth = width 
                     doc.style.borderStyle = "solid"
-                    myInterval = setInterval(changeQuarter, 50);
+                    myInterval = setInterval(changeQuarter, 100);
                 }
 
                 function changeQuarter() {
                     var doc = document.getElementById("circle");
-                    const random = Math.floor(Math.random() * 4) + 1
+                    if(myArray.length === 0) {
+                        myArray = createRandomArray()
+                    }
+                    const random = myArray.shift()
                     doc.style.borderTopColor = getQuarterColour(random, 1)
                     doc.style.borderRightColor = getQuarterColour(random, 2)
                     doc.style.borderBottomColor = getQuarterColour(random, 3)
@@ -82,8 +114,10 @@
                 }
 
                 function createRandomArray() {
+                    // let randomArray = [1,3,2,4]
                     let randomArray = [1,2,3,4]
-
+                    // return shuffle(randomArray)
+                    return randomArray
                 }
 
                 function shuffle(array) {
@@ -106,10 +140,14 @@
 
                 function clear() {
                     if("myInterval" in window)
-                        clearInterval(myInterval);
+                        clearInterval(myInterval)
+
+                    if("myTimeout" in window)
+                        clearTimeout(myTimeout)
                     
                     var doc = document.getElementById("circle");
                     doc.removeAttribute("style")
+                    setCircle()
                 }
 
                 function connect() {
@@ -133,6 +171,10 @@
                             clear()
                             changeColour()
                         }
+                        else if(event.data === "strobe") {
+                            clear()
+                            setupStrobe()
+                        }
                     };
 
                     socket.onclose = function(event) {
@@ -150,11 +192,7 @@
                     };
                 }
 
-                
                 connect()
-                // fourQuaters()
-                // fourQuatersFlashing()
-                // changeColour()
             });
 
         </script>
