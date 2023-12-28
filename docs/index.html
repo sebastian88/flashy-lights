@@ -67,7 +67,7 @@
                     doc.style.backgroundColor = "white"
                     myInterval = setInterval(change, 1000);
                 }
-                
+
                 function change() {
                     var doc = document.getElementById("circle");
                     var color = ["blue", "brown", "green", "white", "pink"];
@@ -82,6 +82,16 @@
                     doc.style.borderWidth = width 
                     doc.style.borderStyle = "solid"
                     doc.style.borderColor = "red green pink yellow"
+                    doc.style.animation= "loading 1s linear infinite"
+                }
+
+                function oneQuaterRed() {
+                    console.log("hello")
+                    var doc = document.getElementById("circle");
+                    var width = doc.offsetWidth/2
+                    doc.style.borderWidth = width 
+                    doc.style.borderStyle = "solid"
+                    doc.style.borderColor = "red black black black"
                     doc.style.animation= "loading 1s linear infinite"
                 }
 
@@ -174,6 +184,10 @@
                         else if(event.data === "strobe") {
                             clear()
                             setupStrobe()
+                        }
+                        else if(event.data === "oneQuarterRed") {
+                            clear()
+                            oneQuaterRed()
                         }
                     };
 
