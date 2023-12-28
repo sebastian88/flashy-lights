@@ -86,7 +86,6 @@
                 }
 
                 function oneQuaterRed() {
-                    console.log("hello")
                     var doc = document.getElementById("circle");
                     var width = doc.offsetWidth/2
                     doc.style.borderWidth = width 
@@ -202,13 +201,22 @@
                             console.log('[close] Connection died');
                         }
                         setTimeout(connect, 2000)
+                        logTime()
                     };
 
                     socket.onerror = function(error) {
                         console.log(`[error]`);
-                        setTimeout(connect, 1000)
+                        setTimeout(connect, 2000)
+                        logTime()
                     };
                 }
+
+                function logTime() {
+                    const d = new Date();
+                    let time = d.toTimeString()
+                    console.log(`reconnecting at ${time}`)
+                }
+                logTime()
                 clear()
                 changeColour()
                 connect()

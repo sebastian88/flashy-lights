@@ -33,30 +33,45 @@
 
             window.addEventListener("load", () => {
 
-                socket = new WebSocket("wss://9iw2tbwbl0.execute-api.eu-north-1.amazonaws.com/production/");
+                function connect() {
+                    socket = new WebSocket("wss://9iw2tbwbl0.execute-api.eu-north-1.amazonaws.com/production/");
 
-                socket.onopen = function(e) {
-                    console.log("Connected")
-                    // socket.send(`{"action": "sendmessage", "message":"fourQuaters"}`);
-                };
+                    socket.onopen = function(e) {
+                        console.log("Connected")
+                        myInterval = setInterval(socketPing, 60000)
+                    };
 
-                socket.onmessage = function(event) {
-                    console.log(`[message] Data received from server: ${event.data}`);
-                };
+                    socket.onmessage = function(event) {
+                        console.log(`[message] Data received from server: ${event.data}`);
+                    };
 
-                socket.onclose = function(event) {
-                if (event.wasClean) {
-                    console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-                } else {
-                    // e.g. server process killed or network down
-                    // event.code is usually 1006 in this case
-                    console.log('[close] Connection died');
+                    socket.onclose = function(event) {
+                        if (event.wasClean) {
+                            console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+                        } else {
+                            // e.g. server process killed or network down
+                            // event.code is usually 1006 in this case
+                            console.log('[close] Connection died');
+                        }
+                        if("myInterval" in window)
+                            clearInterval(myInterval)
+                        setTimeout(connect, 2000)
+                    };
+
+                    socket.onerror = function(error) {
+                        console.log(`[error]`);
+                        if("myInterval" in window)
+                            clearInterval(myInterval)
+                        setTimeout(connect, 2000)
+                    };
                 }
-                };
 
-                socket.onerror = function(error) {
-                    console.log(`[error]`);
-                };
+                function socketPing() {
+                    console.log("ping")
+                    socket.send(`{"action": "sendmessage", "message":"ping"}`);
+                }
+
+                connect()
             });
             function sendMessage(message) {
                     socket.send(`{"action": "sendmessage", "message":"${message}"}`);
