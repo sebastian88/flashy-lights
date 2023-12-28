@@ -192,20 +192,25 @@
                     };
 
                     socket.onclose = function(event) {
-                    if (event.wasClean) {
-                        console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-                    } else {
-                        // e.g. server process killed or network down
-                        // event.code is usually 1006 in this case
-                        console.log('[close] Connection died');
-                    }
+                        if (event.wasClean) {
+                            console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+                            
+                            
+                        } else {
+                            // e.g. server process killed or network down
+                            // event.code is usually 1006 in this case
+                            console.log('[close] Connection died');
+                        }
+                        setTimeout(connect, 2000)
                     };
 
                     socket.onerror = function(error) {
                         console.log(`[error]`);
+                        setTimeout(connect, 1000)
                     };
                 }
-
+                clear()
+                changeColour()
                 connect()
             });
 
